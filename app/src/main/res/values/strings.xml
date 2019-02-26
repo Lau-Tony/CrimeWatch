@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">CrimeWatch</string>
+    <string name="crime_map_button">Crime Map</string>
+    <string name="settings_button">Settings</string>
+    <string name="about_us_button">About Us</string>
+    <string name="welcome">Welcome to Crime Watch</string>
+    <string name="settings_title">Settings</string>
+    <string name="crime_map_title">Crime Map</string>
+    <string name="about_us_title">About Us</string>
+</resources>
