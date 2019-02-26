@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         crimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, CrimeMap.class);
+                Intent i = new Intent(MainActivity.this, CrimeMapsActivity.class);
                 startActivity(i);
             }
         });

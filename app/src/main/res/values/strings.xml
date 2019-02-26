@@ -7,4 +7,5 @@
     <string name="settings_title">Settings</string>
     <string name="crime_map_title">Crime Map</string>
     <string name="about_us_title">About Us</string>
+    <string name="title_activity_crime_maps">Map</string>
 </resources>
