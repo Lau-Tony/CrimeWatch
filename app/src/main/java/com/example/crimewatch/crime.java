@@ -5,8 +5,7 @@ public class crime {
     int x;
     int y;
 
-
-    public crime(String offense, int x, int y){
+    public crime(){
         this.offense = offense;
         this.x = x;
         this.y = y;

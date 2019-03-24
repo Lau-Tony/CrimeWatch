@@ -1,8 +1,14 @@
 package com.example.crimewatch;
 
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.webkit.HttpAuthHandler;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -21,10 +27,14 @@ import java.util.List;
 
 
 public class CrimeMapsActivity extends AppCompatActivity implements OnMapReadyCallback {
-            
+    private String TAG = CrimeMapsActivity.class.getSimpleName();
     private GoogleMap mMap;
-    private FetchCrimeData fetch;
     float zoomLevel = 15.0f;
+    private ArrayList<crime> crimes = new ArrayList<>();
+    private ProgressDialog pDialog;
+    private ListView lv;
+    private static String URL = "https://gis.mapleridge.ca/arcgis/rest/services/OpenData/PublicSafety/MapServer/7/query?where=1%3D1&outFields=OccuranceYear,ReportedWeekday,Offense,City&outSR=4326&f=json";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,29 +44,8 @@ public class CrimeMapsActivity extends AppCompatActivity implements OnMapReadyCa
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        new getCrime().execute();
     }
-
-
-    public List<crime> fetchCrime() throws IOException, JSONException {
-        String url = "https://gis.mapleridge.ca/arcgis/rest/services/OpenData/PublicSafety/MapServer/7/query?where=1%3D1&outFields=OccuranceYear,Offense,OffenseCategory,HouseNumber,City,SHAPE,StreetName&returnGeometry=false&outSR=4326&f=json";
-        String request = fetch.request(url);
-
-        List<crime> crime = new ArrayList<crime>();
-        JSONObject root = new JSONObject(request);
-        JSONArray c = root.getJSONArray("features");
-        JSONObject attribute;
-        JSONObject geometry;
-
-        for(int i = 0; i < c.length(); i++){
-            JSONObject crimeObject = c.getJSONObject(i);
-            attribute = (JSONObject) crimeObject.get("attributes");
-            System.out.println(attribute);
-            System.out.println("Hello");
-
-        }
-        return crime;
-    }
-
 
 
    /**
@@ -78,4 +67,71 @@ public class CrimeMapsActivity extends AppCompatActivity implements OnMapReadyCa
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, zoomLevel));
     }
+
+
+    private class getCrime extends AsyncTask<Void, Void, Void> {
+
+
+
+        @Override
+        protected Void doInBackground(Void... arg0) {
+
+            FetchCrimeData sh = new FetchCrimeData();
+
+            String jsonStr = sh.makeServiceCall(URL);
+            if (jsonStr != null) {
+                try {
+                    JSONObject crimeJsonObject = new JSONObject(jsonStr);
+                    JSONArray crimeJsonArray = crimeJsonObject.getJSONArray("features");
+
+                    for (int i = 0; i < crimeJsonArray.length(); i++) {
+                        JSONObject c = crimeJsonArray.getJSONObject(i);
+                        String attribute = c.getString("attributes");
+                        String geometry = c.getString("geometry");
+                        JSONObject crimeobj = new JSONObject(attribute);
+                        JSONObject coorObj = new JSONObject(geometry);
+
+                        String offense = crimeobj.getString("Offense");
+                        int xcoor = coorObj.getInt("x");
+                        int ycoor = coorObj.getInt("y");
+
+                        crime crime = new crime();
+                        crime.setOffense(offense);
+                        crime.setX(xcoor);
+                        crime.setY(ycoor);
+                        crimes.add(crime);
+
+                    }
+
+                } catch (final JSONException e) {
+                    Log.e(TAG, "Json parsing error: " + e.getMessage());
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(),
+                                    "Json parsing error: " + e.getMessage(),
+                                    Toast.LENGTH_LONG)
+                                    .show();
+                        }
+                    });
+
+                }
+            } else {
+                Log.e(TAG, "Couldn't get json from server.");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(),
+                                "Couldn't get json from server. Check LogCat for possible errors!",
+                                Toast.LENGTH_LONG)
+                                .show();
+                    }
+                });
+
+            }
+
+            return null;
+        }
+    }
+
 }
