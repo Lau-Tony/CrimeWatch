@@ -15,6 +15,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
@@ -31,8 +32,6 @@ public class CrimeMapsActivity extends AppCompatActivity implements OnMapReadyCa
     private GoogleMap mMap;
     float zoomLevel = 15.0f;
     private ArrayList<crime> crimes = new ArrayList<>();
-    private ProgressDialog pDialog;
-    private ListView lv;
     private static String URL = "https://gis.mapleridge.ca/arcgis/rest/services/OpenData/PublicSafety/MapServer/7/query?where=1%3D1&outFields=OccuranceYear,ReportedWeekday,Offense,City&outSR=4326&f=json";
 
 
@@ -66,6 +65,9 @@ public class CrimeMapsActivity extends AppCompatActivity implements OnMapReadyCa
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Maple Ridge"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, zoomLevel));
+
+
+
     }
 
 
@@ -92,14 +94,15 @@ public class CrimeMapsActivity extends AppCompatActivity implements OnMapReadyCa
                         JSONObject coorObj = new JSONObject(geometry);
 
                         String offense = crimeobj.getString("Offense");
-                        int xcoor = coorObj.getInt("x");
-                        int ycoor = coorObj.getInt("y");
+                        double xcoor = coorObj.getDouble("x");
+                        double ycoor = coorObj.getDouble("y");
 
                         crime crime = new crime();
                         crime.setOffense(offense);
                         crime.setX(xcoor);
                         crime.setY(ycoor);
                         crimes.add(crime);
+                       // Log.d("list", crimes.toString());
 
                     }
 
