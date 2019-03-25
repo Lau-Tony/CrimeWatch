@@ -32,18 +32,19 @@ public class CrimeMapsActivity extends AppCompatActivity implements OnMapReadyCa
     private GoogleMap mMap;
     float zoomLevel = 15.0f;
     private ArrayList<crime> crimes = new ArrayList<>();
-    private static String URL = "https://gis.mapleridge.ca/arcgis/rest/services/OpenData/PublicSafety/MapServer/7/query?where=1%3D1&outFields=OccuranceYear,ReportedWeekday,Offense,City&outSR=4326&f=json";
+    private static String URL = "https://gis.mapleridge.ca/arcgis/rest/services/OpenData/PublicSafety/MapServer/7/query?where=1%3D1&outFields=*&orderByFields=OBJECTID%20DESC&outSR=4326&f=json";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        new getCrime().execute();
         setContentView(R.layout.activity_crime_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        new getCrime().execute();
+
     }
 
 
@@ -58,14 +59,19 @@ public class CrimeMapsActivity extends AppCompatActivity implements OnMapReadyCa
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(49.2193, -122.6015);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Maple Ridge"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, zoomLevel));
-
+        try {
+            Thread.sleep(2000);
+        } catch(InterruptedException e) {
+        }
+        for(int i = 0; i < crimes.size(); i++) {
+            LatLng currentCrime = new LatLng(crimes.get(i).getY(),crimes.get(i).getX());
+            mMap.addMarker(new MarkerOptions().position(currentCrime).title(crimes.get(i).getOffense()));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(currentCrime));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentCrime, zoomLevel));
+        }
 
 
     }
@@ -102,7 +108,7 @@ public class CrimeMapsActivity extends AppCompatActivity implements OnMapReadyCa
                         crime.setX(xcoor);
                         crime.setY(ycoor);
                         crimes.add(crime);
-                       // Log.d("list", crimes.toString());
+                        //Log.d("list", crimes.toString());
 
                     }
 
@@ -132,7 +138,6 @@ public class CrimeMapsActivity extends AppCompatActivity implements OnMapReadyCa
                 });
 
             }
-
             return null;
         }
     }
