@@ -28,27 +28,27 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void settingsButton(View v)
-    {
-        Button settingsButton = (Button) findViewById(R.id.settings_button);
-        settingsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, Settings.class);
-                startActivity(i);
-            }
-        });
-    }
-
-    public void aboutUsButton(View v)
-    {
-        Button aboutUsButton = (Button) findViewById(R.id.about_us_button);
-        aboutUsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, AboutUs.class);
-                startActivity(i);
-            }
-        });
-    }
+//    public void settingsButton(View v)
+//    {
+//        Button settingsButton = (Button) findViewById(R.id.settings_button);
+//        settingsButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent i = new Intent(MainActivity.this, Settings.class);
+//                startActivity(i);
+//            }
+//        });
+//    }
+//
+//    public void aboutUsButton(View v)
+//    {
+//        Button aboutUsButton = (Button) findViewById(R.id.about_us_button);
+//        aboutUsButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent i = new Intent(MainActivity.this, AboutUs.class);
+//                startActivity(i);
+//            }
+//        });
+//    }
 }

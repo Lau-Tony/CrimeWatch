@@ -33,9 +33,6 @@
         <activity
             android:name=".CrimeMapsActivity"
             android:label="@string/title_activity_crime_maps"></activity>
-        <activity android:name=".AboutUs" />
-        <activity android:name=".Settings" />
-        <activity android:name=".CrimeMap" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

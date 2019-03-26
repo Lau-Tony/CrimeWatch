@@ -63,7 +63,7 @@ public class CrimeMapsActivity extends AppCompatActivity implements OnMapReadyCa
         mMap = googleMap;
 
         try {
-            Thread.sleep(2000);
+            Thread.sleep(1500);
         } catch(InterruptedException e) {
         }
         for(int i = 0; i < crimes.size(); i++) {
