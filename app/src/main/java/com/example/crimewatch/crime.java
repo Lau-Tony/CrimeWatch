@@ -39,7 +39,7 @@ public class crime {
 
     @Override
     public String toString() {
-        return "Offense" + offense + "\nx" + x + "\ny" + y;
+        return "\nOffense" + offense + "\nx" + x + "\ny" + y;
     }
 }
 
