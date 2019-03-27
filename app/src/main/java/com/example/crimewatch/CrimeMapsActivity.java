@@ -31,8 +31,13 @@ public class CrimeMapsActivity extends AppCompatActivity implements OnMapReadyCa
     private String TAG = CrimeMapsActivity.class.getSimpleName();
     private GoogleMap mMap;
     float zoomLevel = 15.0f;
+<<<<<<< HEAD
     private ArrayList<crime> crimes = new ArrayList<>();
     private static String URL = "https://gis.mapleridge.ca/arcgis/rest/services/OpenData/PublicSafety/MapServer/7/query?where=1%3D1&outFields=*&orderByFields=OBJECTID%20DESC&outSR=4326&f=json";
+=======
+    private ArrayList<crime> crimes;
+    private static String URL = "https://gis.mapleridge.ca/arcgis/rest/services/OpenData/PublicSafety/MapServer/7/query?where=1%3D1&outFields=OccuranceYear,ReportedWeekday,Offense,City&outSR=4326&f=json";
+>>>>>>> cce79d2c31f72b79b8db41a18c510538c11e6726
 
 
     @Override
@@ -40,10 +45,16 @@ public class CrimeMapsActivity extends AppCompatActivity implements OnMapReadyCa
         super.onCreate(savedInstanceState);
         new getCrime().execute();
         setContentView(R.layout.activity_crime_maps);
+        crimes = new ArrayList<crime>();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+<<<<<<< HEAD
+=======
+        new getCrime().execute();
+
+>>>>>>> cce79d2c31f72b79b8db41a18c510538c11e6726
 
     }
 
@@ -73,13 +84,28 @@ public class CrimeMapsActivity extends AppCompatActivity implements OnMapReadyCa
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentCrime, zoomLevel));
         }
 
-
     }
 
 
     private class getCrime extends AsyncTask<Void, Void, Void> {
 
 
+        protected void onPostExecute(Void result){
+            super.onPostExecute(result);
+            for(crime c: crimes){
+                LatLng p = new LatLng(c.getX(),c.getY());
+                mMap.addMarker(new MarkerOptions().position(p).title(c.getOffense()));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(p));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(p, zoomLevel));
+            }
+
+//            for(int i = 0; i < crimes.size(); i++){
+//                MarkerOptions m = new MarkerOptions().title(crimes.get(i).getOffense()).position(new LatLng(crimes.get(i).getX(),crimes.get(i).getY()));
+//                mMap.addMarker(m);
+//
+//            }
+            Log.d("list", crimes.toString());
+        }
 
         @Override
         protected Void doInBackground(Void... arg0) {
@@ -108,10 +134,13 @@ public class CrimeMapsActivity extends AppCompatActivity implements OnMapReadyCa
                         crime.setX(xcoor);
                         crime.setY(ycoor);
                         crimes.add(crime);
+<<<<<<< HEAD
                         //Log.d("list", crimes.toString());
+=======
+                       //Log.d("list", crimes.toString());
+>>>>>>> cce79d2c31f72b79b8db41a18c510538c11e6726
 
                     }
-
                 } catch (final JSONException e) {
                     Log.e(TAG, "Json parsing error: " + e.getMessage());
                     runOnUiThread(new Runnable() {
@@ -141,5 +170,6 @@ public class CrimeMapsActivity extends AppCompatActivity implements OnMapReadyCa
             return null;
         }
     }
+
 
 }
